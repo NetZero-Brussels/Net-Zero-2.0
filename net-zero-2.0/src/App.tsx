@@ -26,16 +26,20 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './variables.css';
 
+/* Page Imports */
+import { LandingPage } from './pages';
+
+
+
 setupIonicReact({});
 
 function App() {
   return (
 
     <IonApp>
-      
       <IonReactRouter>
         <IonRouterOutlet id="main">
-          <Route path="/landing" render={() => <></>} />
+          <Route path="/landing" render={() => <LandingPage />} />
           <Route path="/register" render={() => <></>} />
 
           <Route path="/tabs" render={() => <></>} />
