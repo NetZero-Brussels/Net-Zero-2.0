@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">net-zero-2.0</string>
+    <string name="title_activity_main">net-zero-2.0</string>
+    <string name="package_name">com.netzero.app</string>
+    <string name="custom_url_scheme">com.netzero.app</string>
+</resources>
