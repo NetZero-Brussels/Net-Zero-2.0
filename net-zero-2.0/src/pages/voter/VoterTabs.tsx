@@ -16,16 +16,16 @@ import {
   personOutline,
   rocketOutline,
 } from "ionicons/icons";
-import DiscoveryIcon from "../../public/Discovery.svg";
-import AccountIcon from "../../public/Account.svg";
+import DiscoveryPage from "./DiscoveryPage";
 
 import { Header } from "../../components";
 
 const VoterTabs = () => {
   return (
     <IonPage>
-      <Header />
       <IonTabs>
+        <Header />
+
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/voter/discovery">
             <IonIcon icon={rocketOutline} />
@@ -37,8 +37,12 @@ const VoterTabs = () => {
           </IonTabButton>
         </IonTabBar>
         <IonRouterOutlet>
-          <Route path="/voter/discovery" render={() => <></>} exact={true} />
-          <Route path="/voter/account" render={() => <></>} exact={true} />
+          <Route
+            path="/voter/discovery"
+            render={() => <DiscoveryPage />}
+            exact={true}
+          />
+          <Route path="/voter/account" render={() => <>Hola</>} exact={true} />
           <Route
             path="/voter"
             render={() => <Redirect to="/voter/discovery" />}
