@@ -1,57 +1,55 @@
-import './App.css';
-import { Redirect, Route } from 'react-router-dom';
-import {
-  IonApp,
-  IonRouterOutlet,
-  setupIonicReact,
-} from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
+import "./App.css";
+import { Redirect, Route } from "react-router-dom";
+import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
+import { IonReactRouter } from "@ionic/react-router";
+import { ThirdwebProvider } from "thirdweb/react";
 
 /* Core CSS required for Ionic components to work properly */
-import '@ionic/react/css/core.css';
+import "@ionic/react/css/core.css";
 
 /* Basic CSS for apps built with Ionic */
-import '@ionic/react/css/normalize.css';
-import '@ionic/react/css/structure.css';
-import '@ionic/react/css/typography.css';
+import "@ionic/react/css/normalize.css";
+import "@ionic/react/css/structure.css";
+import "@ionic/react/css/typography.css";
 
 /* Optional CSS utils that can be commented out */
-import '@ionic/react/css/padding.css';
-import '@ionic/react/css/float-elements.css';
-import '@ionic/react/css/text-alignment.css';
-import '@ionic/react/css/text-transformation.css';
-import '@ionic/react/css/flex-utils.css';
-import '@ionic/react/css/display.css';
+import "@ionic/react/css/padding.css";
+import "@ionic/react/css/float-elements.css";
+import "@ionic/react/css/text-alignment.css";
+import "@ionic/react/css/text-transformation.css";
+import "@ionic/react/css/flex-utils.css";
+import "@ionic/react/css/display.css";
 
 /* Theme variables */
-import './variables.css';
+import "./variables.css";
 
 /* Page Imports */
-import { LandingPage } from './pages';
-
-
+import { LandingPage, Onboarding, OnboardingCompleted } from "./pages";
 
 setupIonicReact({});
 
 function App() {
   return (
-
     <IonApp>
-      <IonReactRouter>
-        <IonRouterOutlet id="main">
-          <Route path="/landing" render={() => <LandingPage />} />
-          <Route path="/register" render={() => <></>} />
-
-          <Route path="/tabs" render={() => <></>} />
-          <Route path="/dashboard" render={() => <></>} />
-          <Route
-            path="/"
-            render={() => <Redirect to="/landing" />}
-            exact={true}
-          />
-        </IonRouterOutlet>
-      </IonReactRouter>
-      
+      <ThirdwebProvider>
+        <IonReactRouter>
+          <IonRouterOutlet id="main">
+            <Route path="/landing" render={() => <LandingPage />} />
+            <Route path="/onboarding" render={() => <Onboarding />} />
+            <Route
+              path="/onboarding-completed"
+              render={() => <OnboardingCompleted />}
+            />
+            <Route path="/tabs" render={() => <></>} />
+            <Route path="/dashboard" render={() => <></>} />
+            <Route
+              path="/"
+              render={() => <Redirect to="/landing" />}
+              exact={true}
+            />
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </ThirdwebProvider>
     </IonApp>
   );
 }
