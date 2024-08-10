@@ -24,8 +24,6 @@ const VoterTabs = () => {
   return (
     <IonPage>
       <IonTabs>
-        <Header />
-
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/voter/discovery">
             <IonIcon icon={rocketOutline} />

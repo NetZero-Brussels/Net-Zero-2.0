@@ -4,7 +4,7 @@ import { mockApprovedProjectData } from "../../../data/approvedCardData";
 
 export default function ApprovedProjects() {
   return (
-    <div className="mx-[10%] mt-7">
+    <div className="mx-[10%] mt-7 mb-20">
       <div className="flex flex-row mb-4 justify-between items-center">
         <h1 className="text-[28px] font-semibold leading-[32px] text-center ">
           Approved Projects

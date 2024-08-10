@@ -5,12 +5,14 @@ import { DiscoveryHeader } from "../../components/discovery";
 
 export default function DiscoveryPage() {
   return (
-    <IonContent>
+    <>
       <Header />
-      <DiscoveryHeader />
-      <MyVotes />
-      <OngoingVotes />
-      <ApprovedProjects />
-    </IonContent>
+      <IonContent>
+        <DiscoveryHeader />
+        <MyVotes />
+        <OngoingVotes />
+        <ApprovedProjects />
+      </IonContent>
+    </>
   );
 }
