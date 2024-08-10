@@ -7,6 +7,7 @@
     "@capacitor/cli": "^6.1.2",
     "@capacitor/core": "^6.1.2",
     "@capacitor/ios": "^6.1.2",
+    "@ethereum-attestation-service/eas-sdk": "^2.5.0",
     "@ionic/react": "^8.2.6",
     "@ionic/react-router": "^8.2.6",
     "@testing-library/jest-dom": "^5.17.0",
@@ -23,7 +24,7 @@
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
     "thirdweb": "^5.44.1",
-    "typescript": "^5.0.4",
+    "typescript": "^5.5.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
