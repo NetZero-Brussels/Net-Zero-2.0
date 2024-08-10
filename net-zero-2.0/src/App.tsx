@@ -24,7 +24,12 @@ import "@ionic/react/css/display.css";
 import "./variables.css";
 
 /* Page Imports */
-import { LandingPage, Onboarding, OnboardingCompleted } from "./pages";
+import {
+  LandingPage,
+  Onboarding,
+  OnboardingCompleted,
+  VoterTabs,
+} from "./pages";
 
 setupIonicReact({});
 
@@ -40,7 +45,7 @@ function App() {
               path="/onboarding-completed"
               render={() => <OnboardingCompleted />}
             />
-            <Route path="/tabs" render={() => <></>} />
+            <Route path="/voter" render={() => <VoterTabs />} />
             <Route path="/dashboard" render={() => <></>} />
             <Route
               path="/"

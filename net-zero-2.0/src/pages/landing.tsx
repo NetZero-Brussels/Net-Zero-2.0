@@ -8,10 +8,8 @@ import {
   IonRedirect,
   IonText,
 } from "@ionic/react";
-import Header from "../components/header";
-import ThirdwebLogIn from "../components/LogIn";
-import ThirdwebSignUp from "../components/SignUp";
-import { useActiveWallet, useWalletInfo } from "thirdweb/react";
+import { Header, ThirdwebLogIn, ThirdwebSignUp } from "../components";
+import { useActiveWallet } from "thirdweb/react";
 
 export default function LandingPage() {
   const wallet = useActiveWallet();

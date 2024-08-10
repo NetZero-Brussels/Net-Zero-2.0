@@ -9,7 +9,7 @@ import {
   IonCard,
   IonCardContent,
 } from "@ionic/react";
-import Header from "../../components/header";
+import { Header } from "../../components";
 import React, { useState } from "react";
 
 export default function LandingPage() {
