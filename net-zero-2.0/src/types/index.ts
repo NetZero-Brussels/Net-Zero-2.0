@@ -18,3 +18,11 @@ export interface ProjectCardData {
   endTime: string;
   fundedPercentage: number;
 }
+
+
+export interface ApprovedProjectData {
+  id: number;
+  name: string;
+  description: string;
+  moneyRaised: string;
+}

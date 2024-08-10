@@ -1,8 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { ProjectCardData } from "../../types";
+import VotingModal from "./VotingModal";
 
 const OngoingCard = (project: ProjectCardData) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleVoteClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleVoteSubmit = (voteCount: number) => {
+    console.log(`Voted with ${voteCount} votes for ${project.projectName}`);
+    // Here you can add logic to handle the vote submission, e.g., API call
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -75,10 +90,18 @@ const OngoingCard = (project: ProjectCardData) => {
         <button className="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700">
           View
         </button>
-        <button className="px-4 py-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700">
+        <button
+          onClick={handleVoteClick}
+          className="px-4 py-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700"
+        >
           Vote
         </button>
       </div>
+      <VotingModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        onSubmit={handleVoteSubmit}
+      />
     </div>
   );
 };
