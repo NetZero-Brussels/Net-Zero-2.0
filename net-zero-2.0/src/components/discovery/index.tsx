@@ -1,3 +1,6 @@
-import VotingCard from "./projectCard";
+import VotingCard from "./votingCard";
+import OngoingCard from "./ongoingCard";
+import DiscoveryHeader from "./DiscoveryHeader";
+import ApprovedCard from "./approvedCard";
 
-export { VotingCard };
+export { VotingCard, OngoingCard, DiscoveryHeader, ApprovedCard };

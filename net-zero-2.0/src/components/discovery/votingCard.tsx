@@ -44,7 +44,7 @@ const VotingCard = (projectCard: VotingCardData) => {
         <div>
           <h2 className="text-xl font-bold">{projectCard.name}</h2>
           <p className="mt-2">{projectCard.description}</p>
-          <p className="mt-2">{projectCard.participants}</p>
+          <p className="mt-2">{projectCard.participants} participants</p>
           <div className="mt-4">
             {timeLeft.hours !== undefined ? (
               <span>

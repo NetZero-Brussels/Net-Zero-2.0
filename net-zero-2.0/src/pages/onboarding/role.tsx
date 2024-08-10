@@ -23,6 +23,8 @@ export default function LandingPage() {
     event.preventDefault();
     console.log("Selected option:", selectedOption);
     // Add your form submission logic here
+    //Save in local storage
+    localStorage.setItem("role", selectedOption);
     window.location.href = "/onboarding-completed";
   };
 
