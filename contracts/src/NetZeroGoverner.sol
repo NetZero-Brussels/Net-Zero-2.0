@@ -1,66 +1,208 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {Governor} from "../lib/openzeppelin-contracts/contracts/governance/Governor.sol";
-import {GovernorTimelockControl} from "../lib/openzeppelin-contracts/contracts/governance/extensions/GovernorTimelockControl.sol";
-import {TimelockController} from "../lib/openzeppelin-contracts/contracts/governance/TimelockController.sol";
+import {Governor} from "@openzeppelin/contracts/governance/Governor.sol";
+import {GovernorTimelockControl} from "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
+import {TimelockController} from "@openzeppelin/contracts/governance/TimelockController.sol";
+import {IWorldID} from "./interfaces/IWorldID.sol";
+import { ByteHasher } from './helpers/ByteHasher.sol';
 
 contract NetZeroGoverner is Governor, GovernorTimelockControl {
+    using ByteHasher for bytes;
 
-    struct project {
-        uint64 votes;
+    struct Project {
         uint64 projectId;
+        uint256 totalVotes;
+        string name;
+        address wallet;
+        uint256 timestamp;
+        uint256 certificateId; // points the nft certificate given from energy web RAC
     }
 
-    struct VoteAllocation {
-        bytes voterId;
-        uint256 numVotes;
+    struct Voter {
+        uint64 voterId;
+        uint256 nullifierHash;
+        string name;
+        uint64 totalVotes;
+        uint64 successfulVotes;
+        uint64 allocatedVotes;
+        uint256 timestamp;
+        address wallet;
+    }
+
+    struct Institution {
+        uint64 institutionId;
+        string name;
+        uint64 totalVoteAllocation;
+        address wallet;
         uint256 timestamp;
     }
-    mapping(bytes => VoteAllocation) private allocations;
-    mapping(uint256 => uint256) private voteIDToAllocation;
-    mapping(uint256 => bytes) private voteIdToNullifierHash;
-    address public resolver;
-    uint256 private totalVoteCount;
+    
+    mapping(address => Voter) public addressToVoter;
+    mapping(uint64 => Project) public projectIdToProject;
+    mapping(address => Institution) public addressToInstitution;
 
-    constructor(TimelockController _timelock)
+    uint64 private voterIndex;
+    uint64 private projectIndex;
+    uint64 private institutionIndex;
+
+    event VoterCreated(uint64 voterId, string name);
+    event ProjectCreated(uint64 projectId, string name, uint256 certificateId);
+    event InstitutionCreated(uint64 institutionId, string name);
+
+
+    uint256 public totalVotesInSession;
+    IWorldID private worldId;
+
+    uint256 internal immutable externalNullifier;
+	mapping(uint256 => bool) internal nullifierHashes;
+
+	error DuplicateNullifier(uint256 nullifierHash);
+
+    bool private votingEnabledOverride;
+
+    uint256 internal immutable groupId = 1;
+
+
+    address private _owner;
+
+    modifier onlyOwner() {
+        require(msg.sender == _owner, "Caller is not the owner");
+        _;
+    }
+
+    constructor(TimelockController _timelock,IWorldID _worldId, string memory _appId, string memory _actionId)
         Governor("Net Zero Governer")
         GovernorTimelockControl(_timelock)
     {
-        resolver = _resolver;
-        totalVoteCount = 0;
+        worldId = _worldId;
+		externalNullifier = abi.encodePacked(abi.encodePacked(_appId).hashToField(), _actionId).hashToField();
+        totalVotesInSession = 0;
+        votingEnabledOverride = true;
+
+        _owner = msg.sender;
+
+        voterIndex = 0;
+        projectIndex = 0;
+        institutionIndex = 0;
     }
 
 
-    function allocateVotes(bytes32[] memory voterHashes, uint256[] memory numVotes, bytes32 message, bytes memory signature) public {
-        require(verifyAttestation(message, signature), "Invalid attestation");
-        require(voterHashes.length == numVotes.length, "Invalid number of votes compared to voters");
+    function createInstitution(string memory name, address walletAddress) public {
 
-        for (uint i = 0; i < voterHashes.length; i++) {
-            require(allocations[voterHashes[i]].timestamp == 0, "Votes already allocated");
+        institutionIndex += 1;
+        
+        addressToInstitution[walletAddress] = Institution({
+            institutionId: institutionIndex,
+            name: name,
+            totalVoteAllocation: 0,
+            wallet: walletAddress,
+            timestamp: block.timestamp
+        });
 
-            allocations[voterHashes[i]] = VoteAllocation({
-                voterHash: voterHashes[i],
-                numVotes: numVotes[i],
-                timestamp: block.timestamp
-            });
-
-            totalVoteCount += numVotes[i];
-        }
+        emit InstitutionCreated(institutionIndex, name);
     }
 
-    function verifyAttestation(bytes32 message, bytes memory signature) internal view returns (bool) {
-        (bool success, bytes memory result) = resolver.staticcall(abi.encodeWithSignature("verifyAttestation(bytes32,bytes)", message, signature));
-        require(success, "Verification failed");
-        return abi.decode(result, (bool));
+    function createProject(uint256 totalVotes, address walletAddress, uint256 certificateId, string memory name) public {
+        
+        projectIndex += 1;
+        
+        projectIdToProject[projectIndex] = Project({
+            projectId: projectIndex,
+            totalVotes: totalVotes,
+            name: name,
+            wallet: walletAddress,
+            certificateId: certificateId,
+            timestamp: block.timestamp
+        });
+
+        emit ProjectCreated(projectIndex, name, certificateId);
+
     }
 
-    function getTotalVotes() public view returns (uint256) {
-        return totalVoteCount;
+    function createVoter(string memory name, address walletAddress) public {
+
+        voterIndex += 1;
+
+        addressToVoter[walletAddress] = Voter({
+            voterId: voterIndex,
+            nullifierHash: 0,
+            name: name,
+            totalVotes: 0,
+            successfulVotes: 0,
+            allocatedVotes: 0,
+            timestamp: block.timestamp,
+            wallet: walletAddress
+        });
+
+        emit VoterCreated(voterIndex, name);
     }
 
-    function getVotes(bytes32 voterHash) public view returns (uint256) {
-        return allocations[voterHash].numVotes;
+    function isVoterRegistered(address userAddress) public view returns (bool) {
+        return addressToVoter[userAddress].timestamp != 0;
+    }
+
+    function isInstitutionRegistered(address institutionAddress) public view returns (bool) {
+        return addressToInstitution[institutionAddress].timestamp != 0;
+    }
+
+    function isProjectRegistered(uint64 projectId) public view returns (bool) {
+        return projectIdToProject[projectId].timestamp != 0;
+    }
+
+
+    function institutionDepositForVotes() payable public {
+        require(addressToInstitution[msg.sender].timestamp != 0, "Institution does not exist");
+        // check for usdc
+        require(msg.value > 0, "Deposit amount must be greater than 0");
+
+        // divide by 1000 to get the amount of votes
+        // addressToInstitution[msg.sender].totalVoteAllocation = totalVoteAllocation;
+    }
+
+    function verifyAndExecuteVote(
+        address signal,
+        uint256 root,
+        uint256 nullifierHash,
+        uint256[8] calldata proof,
+        uint64 projectId,
+        uint64 voteCount
+    ) public {
+
+        require(addressToVoter[msg.sender].allocatedVotes >= voteCount, "Insufficient votes allocated");
+        require(block.timestamp < votingPeriod(), "Voting period has ended");
+        require(votingEnabled(), "Voting is disabled");
+
+        // Check Uniqueness
+        if (nullifierHashes[nullifierHash]) revert DuplicateNullifier(nullifierHash);
+
+        // Verify User has a valid World ID
+        worldId.verifyProof(
+            root,
+            groupId, // set to "1" in the constructor
+            abi.encodePacked(signal).hashToField(),
+            nullifierHash,
+            externalNullifier,
+            proof
+        );
+
+        nullifierHashes[nullifierHash] = true;
+
+
+        // Execute the vote
+        totalVotesInSession += voteCount;
+        addressToVoter[msg.sender].allocatedVotes -= voteCount;
+        addressToVoter[msg.sender].totalVotes += voteCount;
+        projectIdToProject[projectId].totalVotes += voteCount;
+    }
+
+    function setVotingEnabledOverride(bool enabled) public onlyOwner() {
+        votingEnabledOverride = enabled;
+    }
+
+
+    function votingEnabled() public view returns (bool) {
+        return block.timestamp >= votingDelay() || votingEnabledOverride;
     }
 
     function votingDelay() public pure virtual override returns (uint256) {
@@ -157,6 +299,5 @@ contract NetZeroGoverner is Governor, GovernorTimelockControl {
         uint256 weight,
         bytes memory params
     ) internal virtual override {
-        // Implement your vote counting logic here
     }
 }
