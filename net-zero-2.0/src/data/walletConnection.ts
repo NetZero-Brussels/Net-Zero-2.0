@@ -8,6 +8,11 @@ const myChain = defineChain({
 });
 
 
+const baseSepoliaChain = defineChain({
+    id: 84532,
+    rpc: "https://base-sepolia.g.alchemy.com/v2/pkHx6pj0u2G76QD14i_eIH91oYZAsXqc",
+});
+
 
 const client = createThirdwebClient({
     clientId: process.env.REACT_APP_CLIENT_ID!,
@@ -23,7 +28,7 @@ export const NetZeroContract = getContract({
 
 export const NetZeroContractWithAbi = getContract({
     client: client,
-    chain: defineChain(84532), 
+    chain: baseSepoliaChain, 
     address: "0x60423e0B9FB597c35249C86fF0249dcA66C07292",
 });
 

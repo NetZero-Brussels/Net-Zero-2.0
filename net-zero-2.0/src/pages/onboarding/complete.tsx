@@ -19,7 +19,7 @@ import {
 import {
   TransactionButton,
   useActiveAccount,
-  useSendTransaction,
+  useSendTransaction
 } from "thirdweb/react";
 import { baseSepolia } from "thirdweb/chains";
 
@@ -86,6 +86,7 @@ export default function OnboardingCompleted() {
     console.log("TX done");
   }, [activeAccount]);
 
+
   /* const handleButtonClick = () => {
     if (role === null || role === undefined) {
       console.log("Role not set");
@@ -143,13 +144,15 @@ export default function OnboardingCompleted() {
               transaction={() => {
                 // Create a transaction object and return it
                 const tx = prepareContractCall({
-                  contract: NetZeroContract,
+                  contract: NetZeroContractWithAbi,
                   method: "function createVoter(string, address)",
                   params: ["Institution", walletAddr!],
                   /* maxFeePerGas: BigInt(30),
                   maxPriorityFeePerGas: BigInt(1),
                   gasPrice: BigInt(1000), */
                 });
+
+                console.log(tx);
                 return tx;
                 /* const tx = prepareTransaction({
                   to: NetZeroContractWithAbi.address,
