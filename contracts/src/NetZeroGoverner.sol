@@ -154,6 +154,12 @@ contract NetZeroGoverner is Governor, GovernorTimelockControl {
         return projectIdToProject[projectId].timestamp != 0;
     }
 
+    function allocateVotes(address voterAddress, uint64 votes) public onlyOwner() {
+        require(addressToVoter[voterAddress].timestamp != 0, "Voter does not exist");
+        require(votes > 0, "Votes must be greater than 0");
+
+        addressToVoter[voterAddress].allocatedVotes += votes;
+    }
 
     function institutionDepositForVotes() payable public {
         require(addressToInstitution[msg.sender].timestamp != 0, "Institution does not exist");
