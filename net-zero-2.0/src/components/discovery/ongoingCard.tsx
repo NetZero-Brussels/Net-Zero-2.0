@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { ProjectCardData } from "../../types";
 import VotingModal from "./VotingModal";
+import DetailModal from "./DetailModal";
 
 const OngoingCard = (project: ProjectCardData) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
+  //Detail
+  const openDetailModal = () => setIsDetailModalOpen(true);
+  const closeDetailModal = () => setIsDetailModalOpen(false);
+
+  //Vote
   const handleVoteClick = () => {
     setIsModalOpen(true);
   };
@@ -87,7 +94,10 @@ const OngoingCard = (project: ProjectCardData) => {
         </div>
       </div>
       <div className="mt-6 flex justify-between">
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700">
+        <button
+          onClick={openDetailModal}
+          className="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700"
+        >
           View
         </button>
         <button
@@ -101,6 +111,12 @@ const OngoingCard = (project: ProjectCardData) => {
         isOpen={isModalOpen}
         onClose={handleModalClose}
         onSubmit={handleVoteSubmit}
+        projectId={project.id}
+      />
+      <DetailModal
+        isOpen={isDetailModalOpen}
+        onClose={closeDetailModal}
+        project={project}
       />
     </div>
   );

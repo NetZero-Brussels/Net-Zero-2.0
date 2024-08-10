@@ -7,8 +7,21 @@ import { useActiveAccount, useSendTransaction } from "thirdweb/react";
 import { baseSepolia } from "thirdweb/chains";
 import { createThirdwebClient } from "thirdweb";
 import { decodeAbiParameters, parseAbiParameters } from "viem";
+import React, { ReactElement } from "react";
 
-export default function WorldButton() {
+interface WorldButtonProps {
+  children: ReactElement;
+  projectId: number;
+  voteCount: number;
+}
+
+export const WorldButton: React.FC<WorldButtonProps> = ({
+  children,
+  projectId,
+  voteCount,
+}) => {
+  const activeAccount = useActiveAccount();
+
   const client = createThirdwebClient({
     clientId: process.env.REACT_APP_CLIENT_ID!,
   });
@@ -25,9 +38,8 @@ export default function WorldButton() {
 
   const submitTx = (proof: ISuccessResult) => {
     //TODO: infer projectId and voteCount from the UI
-    let projectId = BigInt(0);
-    let voteCount = BigInt(2);
-    const activeAccount = useActiveAccount();
+    let projectIdBig = BigInt(projectId);
+    let voteCountBig = BigInt(voteCount);
 
     const transaction = prepareContractCall({
       contract,
@@ -41,8 +53,8 @@ export default function WorldButton() {
           parseAbiParameters("uint256[8]"),
           proof!.proof as `0x${string}`
         )[0],
-        projectId,
-        voteCount,
+        projectIdBig,
+        voteCountBig,
       ],
     });
 
@@ -57,9 +69,12 @@ export default function WorldButton() {
       onSuccess={submitTx}
       verification_level={VerificationLevel.Device} // minimum verification level accepted, defaults to "orb"
     >
-      {({ open }: any) => (
+      {/* {({ open }: any) => (
         <IonButton onClick={open}>Verify with World ID</IonButton>
-      )}
+      )} */}
+      {({ open }: { open: () => void }) =>
+        React.cloneElement(children, { onClick: open })
+      }
     </IDKitWidget>
   );
-}
+};
