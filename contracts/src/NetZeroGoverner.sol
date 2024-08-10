@@ -87,6 +87,10 @@ contract NetZeroGoverner is Governor, GovernorTimelockControl {
         institutionIndex = 0;
     }
 
+    function resetVotingSession() public onlyOwner() {
+        totalVotesInSession = 0;
+    }
+
 
     function createInstitution(string memory name, address walletAddress) public {
 
