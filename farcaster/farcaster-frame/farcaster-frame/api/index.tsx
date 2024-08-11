@@ -6,58 +6,12 @@ import abi from "./abi.json";
 
 export const app = new Frog({
   title: "Net Zero 2.0",
+  basePath: "/api",
 });
 
-app.frame("/", async (c) => {
+app.frame("/", (c) => {
   return c.res({
-    action: "/finish",
-    image: (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          background: "linear-gradient(to right, #432889, #17101F)",
-          backgroundSize: "100% 100%",
-          flexDirection: "column",
-          flexWrap: "nowrap",
-          height: "100%",
-          justifyContent: "center",
-          textAlign: "center",
-          width: "100%",
-        }}
-      >
-        <div
-          style={{
-            color: "white",
-            fontSize: 60,
-            fontStyle: "normal",
-            letterSpacing: "-0.025em",
-            lineHeight: 1.4,
-            marginTop: 30,
-            padding: "0 120px",
-            whiteSpace: "pre-wrap",
-          }}
-        >
-          {"🌱 Net Zero 2.0 📋"}
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            color: "white",
-            fontSize: 38,
-            fontWeight: "bold",
-            marginTop: 20,
-          }}
-        >
-          <div>{"I am already a voter in NetZero."}</div>
-          <div>{"What are you waiting for?"}</div>
-          <div>{"Let's save the planet together!"}</div>
-        </div>
-      </div>
-    ),
+    image: "http://netzero-frames.vercel.app/preview.png",
     intents: [
       <TextInput placeholder="What is your name?" />,
       <Button.Link href="https://net-zero-2-0.vercel.app/">
