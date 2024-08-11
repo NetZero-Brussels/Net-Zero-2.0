@@ -31,6 +31,7 @@ import {
   OnboardingCompleted,
   VoterTabs,
 } from "./pages";
+import { WagmiProvider } from "wagmi";
 
 setupIonicReact({});
 
