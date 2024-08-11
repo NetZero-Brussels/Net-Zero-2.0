@@ -115,7 +115,7 @@ app.frame("/", async (c) => {
   const leaderboard = await fetchLeaderboard();
 
   return c.res({
-    image: (
+    text: (
       <div
         style={{
           display: "flex",
@@ -211,6 +211,38 @@ app.frame("/", async (c) => {
         ></div>
       </div>
     ),
+    leaderboard: (
+      <div
+        style={{
+          color: 'white',
+          fontSize: 20,
+          marginTop: 20,
+          textAlign: 'center',
+        }}
+      >
+        {leaderboard.length > 0 ? (
+          <ul
+            style={{
+              listStyleType: 'none',
+              padding: 0,
+            }}
+          >
+            {leaderboard.map((user, index) => (
+              <li
+                key={user.address}
+                style={{
+                  marginBottom: 10,
+                }}
+              >
+                {index + 1}. {user.name || user.address}: {user.reputation} points
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div>No users found or unable to fetch data.</div>
+        )}
+      </div>
+    ),
     intents: [
       <TextInput placeholder="Choose your position..." />,
       <Button value="1">1st 🥇</Button>,
@@ -236,7 +268,7 @@ app.transaction("/send-tx", (c) => {
 const isEdgeFunction = typeof EdgeFunction !== "undefined";
 const isProduction = isEdgeFunction || import.meta.env?.MODE !== "development";
 
-devtools(app, { serveStatic });
+devtools(app, isProduction ? {} : { serveStatic });
 
 export const GET = handle(app);
 export const POST = handle(app);
