@@ -1,5 +1,23 @@
 # Net-Zero-2.0
 
+## Deployments
+
+Base - (Social and DAO) - https://base-sepolia.blockscout.com/address/0x7cA95E87F3A95f4689C6b860CA259A68A5D4c5D7
+
+Celo - (Crowfunding) - https://celo-alfajores.blockscout.com/address/0x137f6AD66a03B03674625cD82cb24e24bEa7312d
+
+AES Attestation service. Comprised by two contracts:
+  - [NetZeroInstitutionResolver](https://github.com/NetZero-Brussels/Net-Zero-2.0/blob/main/contracts/src/NetZeroInstitutionResolver.sol): Used for the institutions attestations 
+  - [NetZeroGoverner](https://github.com/NetZero-Brussels/Net-Zero-2.0/blob/main/contracts/src/NetZeroGoverner.sol): Used for DAO
+
+
+
+## Farcaster Showcase
+Quick demo on the onchain integration through Farcaster Frame
+
+https://github.com/user-attachments/assets/e6cca78b-3847-4ca2-9bf1-350e0369b6d5
+
+
 ## Introduction
 
 Net Zero 2.0 is web3 app that empowers everyone to transparently  participate in fair voting, and crowdfund impactful environmental projects for corporate fund allocation.
