@@ -7,6 +7,8 @@ const myChain = defineChain({
     rpc: "https://virtual.base-sepolia.rpc.tenderly.co/ded2449a-54e0-4c7d-97ce-c8fd0cd26cd2",
 });
 
+export const NETZEROADDRESS = "0x4e7A32FAd4364710A81e6B98B64cdc14C5a9E29D";
+
 
 const baseSepoliaChain = defineChain({
     id: 84532,
@@ -20,17 +22,18 @@ const client = createThirdwebClient({
 
 
 export const NetZeroContract = getContract({
-    address: "0x60423e0B9FB597c35249C86fF0249dcA66C07292",
+    address: NETZEROADDRESS,
     chain: baseSepolia,
     client,
 });
 
 
-export const NetZeroContractWithAbi = getContract({
+export const NetZeroContractRPC = getContract({
     client: client,
     chain: baseSepoliaChain, 
-    address: "0x60423e0B9FB597c35249C86fF0249dcA66C07292",
+    address: NETZEROADDRESS,
 });
+
 
 export const TestContract = getContract({
     client: client,

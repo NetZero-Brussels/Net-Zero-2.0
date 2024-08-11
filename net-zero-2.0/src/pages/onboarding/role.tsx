@@ -8,25 +8,34 @@ import {
   IonButton,
   IonCard,
   IonCardContent,
+  IonInput,
 } from "@ionic/react";
 import { Header } from "../../components";
 import React, { useState } from "react";
 
 export default function LandingPage() {
   const [selectedOption, setSelectedOption] = useState<string>("");
+  const [name, setName] = useState<string>("");
 
   const handleOptionChange = (value: string) => {
     setSelectedOption(value);
   };
 
+  const handleNameChange = (event: CustomEvent) => {
+    setName(event.detail.value);
+  };
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log("Selected option:", selectedOption);
+    console.log("Selected option:", selectedOption, "Name:", name);
     // Add your form submission logic here
-    //Save in local storage
+    // Save in local storage
     localStorage.setItem("role", selectedOption);
+    localStorage.setItem("name", name);
     window.location.href = "/onboarding-completed";
   };
+
+  const isFormValid = selectedOption !== "" && name.trim() !== "";
 
   return (
     <IonPage>
@@ -74,7 +83,21 @@ export default function LandingPage() {
             </div>
           </IonRadioGroup>
 
-          <IonButton type="submit" expand="full" className="mt-12 normal-case">
+          <IonItem>
+            <IonLabel position="stacked">Name</IonLabel>
+            <IonInput
+              value={name}
+              placeholder="Enter your name"
+              onIonChange={handleNameChange}
+            />
+          </IonItem>
+
+          <IonButton
+            type="submit"
+            expand="full"
+            className="mt-12 normal-case"
+            disabled={!isFormValid}
+          >
             Confirm
           </IonButton>
         </form>
