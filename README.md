@@ -21,13 +21,12 @@ Seamless transactions on chain + transparent flow of funds stored in vault.
 
 ## Sponsors
 
-- Celo
 - Base
 - EAS
 - Worldcoin
 - Thirdweb: Account registration, user onboarding
 - Tenderly
-- Farcaster
+- Farcaster: View leaderboard, create voter account
 - Blockscout: Contract verification and user receipts
 
 ## Architecture
