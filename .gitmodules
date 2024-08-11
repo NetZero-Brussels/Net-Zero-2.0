@@ -7,3 +7,6 @@
 [submodule "contracts/lib/superform-core"]
 	path = contracts/lib/superform-core
 	url = https://github.com/superform-xyz/superform-core
+[submodule "contracts/lib/eas-contracts"]
+	path = contracts/lib/eas-contracts
+	url = https://github.com/ethereum-attestation-service/eas-contracts

@@ -6,6 +6,9 @@ import {GovernorTimelockControl} from "@openzeppelin/contracts/governance/extens
 import {TimelockController} from "@openzeppelin/contracts/governance/TimelockController.sol";
 import {IWorldID} from "./interfaces/IWorldID.sol";
 import { ByteHasher } from './helpers/ByteHasher.sol';
+import {IEAS, Attestation, AttestationRequest, AttestationRequestData} from "eas-contracts/IEAS.sol";
+import { NO_EXPIRATION_TIME, EMPTY_UID } from "eas-contracts/Common.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract NetZeroGoverner is Governor, GovernorTimelockControl {
     using ByteHasher for bytes;
@@ -33,9 +36,10 @@ contract NetZeroGoverner is Governor, GovernorTimelockControl {
     struct Institution {
         uint64 institutionId;
         string name;
-        uint64 totalVoteAllocation;
+        uint256 totalVoteAllocation;
         address wallet;
         uint256 timestamp;
+        uint256 funds;
     }
     
     mapping(address => Voter) public addressToVoter;
@@ -63,6 +67,8 @@ contract NetZeroGoverner is Governor, GovernorTimelockControl {
 
     uint256 internal immutable groupId = 1;
 
+    IEAS private _eas;
+
 
     address private _owner;
 
@@ -71,7 +77,7 @@ contract NetZeroGoverner is Governor, GovernorTimelockControl {
         _;
     }
 
-    constructor(TimelockController _timelock,IWorldID _worldId, string memory _appId, string memory _actionId)
+    constructor(TimelockController _timelock,IWorldID _worldId, string memory _appId, string memory _actionId, IEAS eas)
         Governor("Net Zero Governer")
         GovernorTimelockControl(_timelock)
     {
@@ -85,6 +91,7 @@ contract NetZeroGoverner is Governor, GovernorTimelockControl {
         voterIndex = 0;
         projectIndex = 0;
         institutionIndex = 0;
+        _eas = eas;
     }
 
     function resetVotingSession() public onlyOwner() {
@@ -101,7 +108,8 @@ contract NetZeroGoverner is Governor, GovernorTimelockControl {
             name: name,
             totalVoteAllocation: 0,
             wallet: walletAddress,
-            timestamp: block.timestamp
+            timestamp: block.timestamp,
+            funds: 0
         });
 
         emit InstitutionCreated(institutionIndex, name);
@@ -154,6 +162,7 @@ contract NetZeroGoverner is Governor, GovernorTimelockControl {
         return projectIdToProject[projectId].timestamp != 0;
     }
 
+    // Admin testing function
     function allocateVotes(address voterAddress, uint64 votes) public onlyOwner() {
         require(addressToVoter[voterAddress].timestamp != 0, "Voter does not exist");
         require(votes > 0, "Votes must be greater than 0");
@@ -161,13 +170,40 @@ contract NetZeroGoverner is Governor, GovernorTimelockControl {
         addressToVoter[voterAddress].allocatedVotes += votes;
     }
 
-    function institutionDepositForVotes() payable public {
-        require(addressToInstitution[msg.sender].timestamp != 0, "Institution does not exist");
-        // check for usdc
-        require(msg.value > 0, "Deposit amount must be greater than 0");
+    function allocateVotesForInstution(address institutionAddress, uint256 votes) public {
+        require(addressToInstitution[institutionAddress].timestamp != 0, "Institution does not exist");
+        require(votes > 0, "Votes must be greater than 0");
 
-        // divide by 1000 to get the amount of votes
-        // addressToInstitution[msg.sender].totalVoteAllocation = totalVoteAllocation;
+        addressToInstitution[institutionAddress].totalVoteAllocation = votes;
+    }
+
+function institutionDepositForVotes(bytes32 schema, uint256 amount) external returns (bytes32) {
+    require(addressToInstitution[msg.sender].timestamp != 0, "Institution does not exist");
+    require(amount > 0, "Deposit amount must be greater than 0");
+
+    // deposit stable coin
+    IERC20(address(0x2b3B6F41e68bccEBEA6530D9978AFAdEa1C58567)).transferFrom(msg.sender, address(this), amount);
+
+    // Update the institution's funds
+    addressToInstitution[msg.sender].funds += amount;
+
+    // Calculate the number of votes
+    uint256 numberVotes = amount / 10;
+
+    // Create the attestation
+    return _eas.attest(
+        AttestationRequest({
+            schema: schema,
+            data: AttestationRequestData({
+                recipient: address(0), // No recipient
+                expirationTime: NO_EXPIRATION_TIME, // No expiration time
+                revocable: true,
+                refUID: EMPTY_UID, // No references UI
+                data: abi.encode(numberVotes), // Encode number of votes as per schema
+                value: 0 // No votes
+            })
+        })
+    );
     }
 
     function verifyAndExecuteVote(
@@ -180,8 +216,8 @@ contract NetZeroGoverner is Governor, GovernorTimelockControl {
     ) public {
 
         require(addressToVoter[msg.sender].allocatedVotes >= voteCount, "Insufficient votes allocated");
-        require(block.timestamp < votingPeriod(), "Voting period has ended");
-        require(votingEnabled(), "Voting is disabled");
+        // require(block.timestamp < votingPeriod(), "Voting period has ended");
+        // require(votingEnabled(), "Voting is disabled");
 
         // Check Uniqueness
         if (nullifierHashes[nullifierHash]) revert DuplicateNullifier(nullifierHash);
@@ -200,8 +236,8 @@ contract NetZeroGoverner is Governor, GovernorTimelockControl {
 
 
         // Execute the vote
-        totalVotesInSession += voteCount;
         addressToVoter[msg.sender].allocatedVotes -= voteCount;
+        totalVotesInSession += voteCount;
         addressToVoter[msg.sender].totalVotes += voteCount;
         projectIdToProject[projectId].totalVotes += voteCount;
     }
@@ -220,7 +256,7 @@ contract NetZeroGoverner is Governor, GovernorTimelockControl {
     }
 
     function votingPeriod() public pure virtual override returns (uint256) {
-        return 1 weeks;
+        return 10 weeks;
     }
 
     function proposalThreshold() public pure virtual override returns (uint256) {

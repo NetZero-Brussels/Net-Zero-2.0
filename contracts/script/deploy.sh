@@ -12,6 +12,14 @@ forge script script/NetZeroGovener.s.sol:NetZeroGovenerScript \
   --verifier blockscout \
   --verifier-url 'https://base-sepolia.blockscout.com/api/'
 
+forge script script/NetZeroGovener.s.sol:NetZeroGovenerScript \
+  --rpc-url $CELO_TESTNET_RPC_URL \
+  --private-key $PRIVATE_KEY \
+  --broadcast \
+  --verify \
+  --verifier blockscout \
+  --verifier-url 'https://celo-alfajores.blockscout.com/api/'
+
 
 # forge verify-contract \
 #   --rpc-url https://sepolia.base.org \
@@ -23,6 +31,7 @@ forge script script/NetZeroGovener.s.sol:NetZeroGovenerScript \
 
 forge script script/PopulateDao.s.sol:PopulateDaoScript --rpc-url $RPC_URL --broadcast --private-key $PRIVATE_KEY
 forge script script/PopulateDao.s.sol:PopulateDaoScript --rpc-url $BASE_SEPOLIA_RPC_URL --broadcast --private-key $PRIVATE_KEY
+forge script script/PopulateDao.s.sol:PopulateDaoScript --rpc-url $CELO_TESTNET_RPC_URL --broadcast --private-key $PRIVATE_KEY
 
 # cast to update allocated votes
     # function allocateVotes(address voterAddress, uint64 votes) public onlyOwner() 

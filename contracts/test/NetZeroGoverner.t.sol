@@ -4,14 +4,20 @@ pragma solidity ^0.8.20;
 import "forge-std/Test.sol";
 import "../src/NetZeroGoverner.sol";
 import "@openzeppelin/contracts/governance/TimelockController.sol";
+import {IEAS, Attestation, AttestationRequest, AttestationRequestData} from "eas-contracts/IEAS.sol";
+
 
 contract NetZeroGovernorTest is Test {
     NetZeroGoverner public netZeroGovernor;
     TimelockController public timelockController;
+    IEAS public eas;
+
     address public owner;
     address public addr1;
     address public addr2;
     address public addr3;
+
+    address public addr4;
 
     // Mock IWorldID contract
     IWorldID public worldIdMock;
@@ -23,6 +29,8 @@ contract NetZeroGovernorTest is Test {
         addr2 = vm.addr(2);
         addr3 = vm.addr(3);
 
+        addr4 = vm.addr(3);
+
         // Deploy TimelockController
         address[] memory proposers = new address[](1);
         proposers[0] = owner;
@@ -30,6 +38,9 @@ contract NetZeroGovernorTest is Test {
         executors[0] = owner;
 
         timelockController = new TimelockController(0, proposers, executors, msg.sender);
+        eas = IEAS(address(addr4));
+
+
 
         // Deploy mock WorldID
         worldIdMock = IWorldID(address(new WorldIDMock()));
@@ -39,13 +50,14 @@ contract NetZeroGovernorTest is Test {
             timelockController,
             worldIdMock,
             "testAppId",
-            "testActionId"
+            "testActionId",
+            eas
         );
     }
 
     function testCreateInstitution() public {
         netZeroGovernor.createInstitution("Test Institution", addr1);
-        (uint64 id, string memory name, uint64 totalVoteAllocation, address wallet, uint256 timestamp) = netZeroGovernor.addressToInstitution(addr1);
+        (uint64 id, string memory name, uint256 totalVoteAllocation, address wallet, uint256 timestamp, uint256 funds) = netZeroGovernor.addressToInstitution(addr1);
 
         assertEq(id, 1);
         assertEq(name, "Test Institution");
