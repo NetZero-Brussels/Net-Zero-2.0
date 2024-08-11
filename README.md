@@ -26,7 +26,7 @@ Seamless transactions on chain + transparent flow of funds stored in vault.
 - Worldcoin
 - Thirdweb: Account registration, user onboarding
 - Tenderly
-- Farcaster: Frame for reputation leaderboard, easy voter account creation
+- Farcaster: Frame for project information & voter account creation
 - Blockscout: Contract verification and user receipts
 
 ## Architecture
