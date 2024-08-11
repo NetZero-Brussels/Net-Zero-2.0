@@ -7,7 +7,7 @@ const myChain = defineChain({
     rpc: "https://virtual.base-sepolia.rpc.tenderly.co/ded2449a-54e0-4c7d-97ce-c8fd0cd26cd2",
 });
 
-export const NETZEROADDRESS = "0x4e7A32FAd4364710A81e6B98B64cdc14C5a9E29D";
+export const NETZEROADDRESS = "0x7cA95E87F3A95f4689C6b860CA259A68A5D4c5D7";
 
 
 const baseSepoliaChain = defineChain({
