@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ProjectCardData } from "../../types";
 import VotingModal from "./VotingModal";
 import DetailModal from "./DetailModal";
+import WorldIDTest from "../WorldIDTest";
 
 const OngoingCard = (project: ProjectCardData) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());

@@ -19,6 +19,7 @@ import {
 import DiscoveryPage from "./DiscoveryPage";
 
 import { Header } from "../../components";
+import ProfilePage from "./ProfilePage";
 
 const VoterTabs = () => {
   return (
@@ -40,7 +41,11 @@ const VoterTabs = () => {
             render={() => <DiscoveryPage />}
             exact={true}
           />
-          <Route path="/voter/account" render={() => <>Hola</>} exact={true} />
+          <Route
+            path="/voter/account"
+            render={() => <ProfilePage />}
+            exact={true}
+          />
           <Route
             path="/voter"
             render={() => <Redirect to="/voter/discovery" />}
