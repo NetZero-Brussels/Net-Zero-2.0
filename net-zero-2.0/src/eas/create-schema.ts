@@ -1,10 +1,15 @@
 import { EAS, Offchain, SchemaEncoder, SchemaRegistry } from '@ethereum-attestation-service/eas-sdk';
-import { ethers } from 'ethers';
+import { ethers, Provider } from 'ethers';
 
-export const EASContractAddress = '0xC2679fBD37d54388Ce493F1DB75320D236e1815e'; // Sepolia v0.26
+
+//base sepolia
+export const EASContractAddress = '0x4200000000000000000000000000000000000021';
+export const SchemaRegistryContractAddress = '0x4200000000000000000000000000000000000020'
 
 // Initialize the sdk with the address of the EAS Schema contract address
 const eas = new EAS(EASContractAddress);
+
+const BASE_SEPOLIA_RPC_URL = process.env.BASE_SEPOLIA_RPC_URL || 'https://base-sepolia.g.alchemy.com/v2/pkHx6pj0u2G76QD14i_eIH91oYZAsXqc';
 
 // Gets a default provider (in production use something else like infura/alchemy)
 const provider = ethers.getDefaultProvider('sepolia');
