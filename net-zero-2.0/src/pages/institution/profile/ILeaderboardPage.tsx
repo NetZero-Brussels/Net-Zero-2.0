@@ -1,7 +1,7 @@
 import react from "react";
-import LeaderboardSelect from "./TeamSelect";
+import ILSelect from "../../../components/institution/ILSelect";
 
-export default function LeaderboardCard() {
+export default function ILeaderboardPage() {
   return (
     <div className="mx-[10%] mt-7 mb-20">
       <div className="flex flex-row mb-4 justify-between items-center">
@@ -10,9 +10,9 @@ export default function LeaderboardCard() {
         </h1>
       </div>
       <p className="mb-[-55px]">
-        Compete with other voters with reputation points.
+        Compete with other companies with reputation points.
       </p>
-      <LeaderboardSelect />
+      <ILSelect />
     </div>
   );
 }

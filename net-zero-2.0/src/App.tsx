@@ -30,8 +30,8 @@ import {
   Onboarding,
   OnboardingCompleted,
   VoterTabs,
+  ITabs,
 } from "./pages";
-import { WagmiProvider } from "wagmi";
 
 setupIonicReact({});
 
@@ -48,7 +48,7 @@ function App() {
               render={() => <OnboardingCompleted />}
             />
             <Route path="/voter" render={() => <VoterTabs />} />
-            <Route path="/dashboard" render={() => <></>} />
+            <Route path="/institutions" render={() => <ITabs />} />
             <Route
               path="/"
               render={() => <Redirect to="/landing" />}

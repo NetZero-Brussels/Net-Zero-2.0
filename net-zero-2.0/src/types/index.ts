@@ -26,3 +26,10 @@ export interface ApprovedProjectData {
   description: string;
   moneyRaised: string;
 }
+
+// Define a type for the user
+export interface AllocationUser {
+  id: number;
+  name: string;
+  points: number;
+}
