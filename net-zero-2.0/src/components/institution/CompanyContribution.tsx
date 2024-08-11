@@ -1,46 +1,18 @@
 import React from "react";
 
-export function ContributionCard() {
+export function CompanyContribution() {
   return (
-    <div className="flex flex-col gap-[32px]">
-      <div className="flex flex-col gap-[8px]">
-        <div className="text-[24px] not-italic font-medium leading-[32px] text-[#3C3C3C] font-futura">
-          Personal contribution
-        </div>
-        <p className="text-[14px] not-italic font-semibold leading-[22px] text-[#656565]">
-          Record of your travel history and environmental impacts.
-        </p>
+    <div className="mx-[10%] mt-14 mb-14">
+      <div className="flex mb-2 justify-between items-center">
+        <h1 className="text-[28px] font-semibold leading-[32px] text-center ">
+          Company Contribution
+        </h1>
       </div>
-      <div
-        id="first-row"
-        className="flex flex-row gap-[24px] content-center justify-around"
-      >
-        <div id="col1" className="flex flex-col p-[11px] gap-[5px]">
-          <p className="text-center text-[16px] not-italic font-semibold leading-[26px]">
-            Walking
-          </p>
-          <p className="text-center text-[16px] not-italic font-semibold leading-[26px] text-[#8FB8A8]">
-            293KM
-          </p>
-        </div>
-        <div className="w-px h-[74px] bg-[#D2F8E1]"></div>
-        <div id="col2" className="flex flex-col p-[11px] gap-[5px]">
-          <p className="text-center text-[16px] not-italic font-semibold leading-[26px]">
-            Car Rides
-          </p>
-          <p className="text-center text-[16px] not-italic font-semibold leading-[26px] text-[#8FB8A8]">
-            14.1k-km
-          </p>
-        </div>
-        <div className="w-px h-[74px] bg-[#D2F8E1]"></div>
-        <div id="col3" className="flex flex-col p-[11px] gap-[2px]">
-          <p className="text-center text-[16px] not-italic font-semibold leading-[26px]">
-            Subway
-          </p>
-          <p className="text-center text-[16px] not-italic font-semibold leading-[26px] text-[#8FB8A8]">
-            4.2k-km
-          </p>
-        </div>
+      <div className="mb-6">
+        <p>
+          Record of your successfully funded projects' contribution to the
+          environment.
+        </p>
       </div>
       <div
         id="second-row"
@@ -59,7 +31,7 @@ export function ContributionCard() {
             </p>
           </div>
           <p className="text-center text-[16px] not-italic font-semibold leading-[26px] text-[#8FB8A8]">
-            567t
+            4,523,345t
           </p>
         </div>
         <div className="w-px h-[100px] bg-[#D2F8E1]"></div>
@@ -71,7 +43,38 @@ export function ContributionCard() {
             Energy Converted
           </p>
           <p className="text-center text-[16px] not-italic font-semibold leading-[26px] text-[#8FB8A8]">
-            32kWh
+            124,186kWh
+          </p>
+        </div>
+      </div>
+      <div
+        id="first-row"
+        className="flex flex-row gap-[24px] content-center justify-around"
+      >
+        <div id="col1" className="flex flex-col p-[11px] gap-[5px]">
+          <p className="text-center text-[16px] not-italic font-semibold leading-[26px]">
+            Solar Energy
+          </p>
+          <p className="text-center text-[16px] not-italic font-semibold leading-[26px] text-[#8FB8A8]">
+            314kWh
+          </p>
+        </div>
+        <div className="w-px h-[74px] bg-[#D2F8E1]"></div>
+        <div id="col2" className="flex flex-col p-[11px] gap-[5px]">
+          <p className="text-center text-[16px] not-italic font-semibold leading-[26px]">
+            Gas
+          </p>
+          <p className="text-center text-[16px] not-italic font-semibold leading-[26px] text-[#8FB8A8]">
+            267kWh
+          </p>
+        </div>
+        <div className="w-px h-[74px] bg-[#D2F8E1]"></div>
+        <div id="col3" className="flex flex-col p-[11px] gap-[2px]">
+          <p className="text-center text-[16px] not-italic font-semibold leading-[26px]">
+            Hydro
+          </p>
+          <p className="text-center text-[16px] not-italic font-semibold leading-[26px] text-[#8FB8A8]">
+            155kWh
           </p>
         </div>
       </div>
