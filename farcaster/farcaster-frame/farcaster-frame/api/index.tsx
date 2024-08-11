@@ -6,11 +6,12 @@ import abi from "./abi.json";
 
 export const app = new Frog({
   title: "Net Zero 2.0",
+  basePath: "/api",
 });
 
 app.frame("/", (c) => {
   return c.res({
-    image: "https://netzero-frames.vercel.app/preview.png",
+    image: "http://netzero-frames.vercel.app/preview.png",
     intents: [
       <TextInput placeholder="What is your name?" />,
       <Button.Link href="https://net-zero-2-0.vercel.app/">
