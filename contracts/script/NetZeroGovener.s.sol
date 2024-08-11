@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/governance/TimelockController.sol";
 import {IWorldID} from "../src/interfaces/IWorldID.sol";
 import {NetZeroGoverner} from "../src/NetZeroGoverner.sol";
 import {IEAS} from "eas-contracts/IEAS.sol";
+import {NetZeroInstitutionResolver} from "../src/NetZeroInstitutionResolver.sol";
 
 contract NetZeroGovenerScript is Script {
     function setUp() public {}

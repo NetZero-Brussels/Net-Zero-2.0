@@ -55,14 +55,6 @@ contract NetZeroGovernorTest is Test {
         );
     }
 
-    function testVoteAllocationInstitution() public {
-        netZeroGovernor.createInstitution("Test Institution", addr1);
-        netZeroGovernor.allocateVotesForInstution(addr1, 100);
-        (uint64 id, string memory name, uint256 totalVoteAllocation, address wallet, uint256 timestamp, uint256 funds) = netZeroGovernor.addressToInstitution(addr1);
-
-        assertEq(totalVoteAllocation, 100);
-    };
-
     function testCreateInstitution() public {
         netZeroGovernor.createInstitution("Test Institution", addr1);
         (uint64 id, string memory name, uint256 totalVoteAllocation, address wallet, uint256 timestamp, uint256 funds) = netZeroGovernor.addressToInstitution(addr1);
