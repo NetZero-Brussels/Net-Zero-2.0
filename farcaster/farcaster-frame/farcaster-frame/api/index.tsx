@@ -5,25 +5,18 @@ import { handle } from "frog/vercel";
 import abi from "./abi.json";
 
 export const app = new Frog({
-  assetsPath: "/",
-  basePath: "/api",
-  title: "Reputation Leaderboard",
+  title: "Net Zero 2.0",
 });
 
 app.frame("/", async (c) => {
-  const { buttonValue, inputText, status } = c;
-  const position = inputText || buttonValue;
-
   return c.res({
+    action: "/finish",
     image: (
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          background:
-            status === "response"
-              ? "linear-gradient(to right, #432889, #17101F)"
-              : "linear-gradient(to right, #432889, #17101F)",
+          background: "linear-gradient(to right, #432889, #17101F)",
           backgroundSize: "100% 100%",
           flexDirection: "column",
           flexWrap: "nowrap",
@@ -54,35 +47,23 @@ app.frame("/", async (c) => {
             flexDirection: "column",
             alignItems: "center",
             color: "white",
-            fontSize: 24,
+            fontSize: 38,
             fontWeight: "bold",
             marginTop: 20,
           }}
         >
-          {"I am already a voter in NetZero."}
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            color: "white",
-            fontSize: 20,
-            marginTop: 40,
-          }}
-        >
-          {"Let's save the planet together!"}
+          <div>{"I am already a voter in NetZero."}</div>
+          <div>{"What are you waiting for?"}</div>
+          <div>{"Let's save the planet together!"}</div>
         </div>
       </div>
     ),
     intents: [
-      <TextInput placeholder="Choose your position..." />,
+      <TextInput placeholder="What is your name?" />,
       <Button.Link href="https://net-zero-2-0.vercel.app/">
         Visit NetZero
       </Button.Link>,
       <Button.Transaction target="/send-tx">Create account</Button.Transaction>,
-      status === "response" && <Button.Reset>Reset</Button.Reset>,
     ],
   });
 });
@@ -99,11 +80,8 @@ app.transaction("/send-tx", (c) => {
   });
 });
 
-// @ts-ignore
-const isEdgeFunction = typeof EdgeFunction !== "undefined";
-const isProduction = isEdgeFunction || import.meta.env?.MODE !== "development";
-
-devtools(app, isProduction ? {} : { serveStatic });
+if (import.meta.env?.MODE === "development") devtools(app, { serveStatic });
+else devtools(app, { assetsPath: "/.frog" });
 
 export const GET = handle(app);
 export const POST = handle(app);
