@@ -10,7 +10,7 @@ export const app = new Frog({
 
 app.frame("/", (c) => {
   return c.res({
-    image: "https://net-zero-2-0.vercel.app/preview.png",
+    image: "https://netzero-frames.vercel.app/preview.png",
     intents: [
       <TextInput placeholder="What is your name?" />,
       <Button.Link href="https://net-zero-2-0.vercel.app/">
