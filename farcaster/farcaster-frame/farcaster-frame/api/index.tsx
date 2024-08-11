@@ -19,7 +19,6 @@ const mockLeaderboard = [
 
 const contractAddress = '0x4e7A32FAd4364710A81e6B98B64cdc14C5a9E29D';
 
-
 async function getContractInstance() {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
@@ -31,8 +30,24 @@ async function getContractInstance() {
   return contract;
 }
 
-async function createVoter(name, walletAddress) {
+async function getUserWalletAddress() {
   try {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+    const walletAddress = await signer.getAddress();
+    console.log(`User's wallet address: ${walletAddress}`);
+    return walletAddress;
+  } catch (error) {
+    console.error('Failed to get wallet address:', error);
+    return null;
+  }
+}
+
+async function createVoter(name) {
+  try {
+    const walletAddress = await getUserWalletAddress();
+    if (!walletAddress) throw new Error("No wallet address found");
     const contract = await getContractInstance();
     const tx = await contract.createVoter(name, walletAddress);
     await tx.wait();
@@ -42,8 +57,10 @@ async function createVoter(name, walletAddress) {
   }
 }
 
-async function createProject(name, walletAddress, totalVotes = 0, certificateId = 0) {
+async function createProject(name, totalVotes = 0, certificateId = 0) {
   try {
+    const walletAddress = await getUserWalletAddress();
+    if (!walletAddress) throw new Error("No wallet address found");
     const contract = await getContractInstance();
     const tx = await contract.createProject(totalVotes, walletAddress, certificateId, name);
     await tx.wait();
@@ -185,8 +202,8 @@ app.frame('/', async (c) => {
             marginTop: 40,
           }}
         >
-          <Button onClick={() => createVoter('New Voter', '0x123...')} >Register New Voter</Button>
-          <Button onClick={() => createProject('New Project', '0x456...')} >Create New Project</Button>
+          <Button onClick={() => createVoter('New Voter')} >Register New Voter</Button>
+          <Button onClick={() => createProject('New Project')} >Create New Project</Button>
         </div>
       </div>
     ),
@@ -203,7 +220,6 @@ app.frame('/', async (c) => {
 // @ts-ignore
 const isEdgeFunction = typeof EdgeFunction !== 'undefined';
 const isProduction = isEdgeFunction || import.meta.env?.MODE !== 'development';
-
 
 devtools(app, { serveStatic });
 
