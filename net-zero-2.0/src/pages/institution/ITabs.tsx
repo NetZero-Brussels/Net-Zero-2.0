@@ -18,7 +18,6 @@ import {
 } from "ionicons/icons";
 import DiscoveryPage from "./DiscoveryPage";
 
-import { Header } from "../../components";
 import IProfilePage from "./ProfilePage";
 
 const ITabs = () => {

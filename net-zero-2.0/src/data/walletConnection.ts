@@ -2,7 +2,8 @@ import { createThirdwebClient, defineChain, getContract } from "thirdweb";
 import {NetZeroGovernerABI} from "./NetZeroGovernerABI";
 import { baseSepolia } from "thirdweb/chains";
 
-const myChain = defineChain({
+//Virtual Network from Tenderly. It is being used for testing purposes.
+const myVirtualChain = defineChain({
     id: 84532,
     rpc: "https://virtual.base-sepolia.rpc.tenderly.co/ded2449a-54e0-4c7d-97ce-c8fd0cd26cd2",
 });
