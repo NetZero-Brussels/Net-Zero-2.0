@@ -10,7 +10,7 @@ contract PopulateDaoScript is Script {
     function run() external {
         // Setup NetZeroGovernor contract from address (assume the contract is already deployed)
         address deployer = vm.envAddress("DEPLOYER_ADDRESS");
-        address netZeroGovernorAddress = vm.envAddress("GOVERNOR_ADDRESS_BASE");
+        address netZeroGovernorAddress = vm.envAddress("GOVERNOR_ADDRESS_CELO");
         NetZeroGoverner netZeroGovernor = NetZeroGoverner(payable(netZeroGovernorAddress));
         
         // Start broadcasting transactions

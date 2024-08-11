@@ -105,7 +105,7 @@ export default function OnboardingCompleted() {
                 )}
               </>
             )}
-            {role === "institution" && (
+            {role === "institutional" && (
               <>
                 <TransactionButton
                   transaction={() => {
@@ -127,6 +127,7 @@ export default function OnboardingCompleted() {
                     );
                   }}
                   onTransactionConfirmed={(receipt) => {
+                    setTransaction(receipt.transactionHash);
                     console.log(
                       "Transaction confirmed",
                       receipt.transactionHash
@@ -151,7 +152,7 @@ export default function OnboardingCompleted() {
                       View on BlockScout
                     </button>
                     <button
-                      onClick={() => window.location.replace("/institution")}
+                      onClick={() => window.location.replace("/institutions")}
                       className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
                     >
                       Continue to Dashboard

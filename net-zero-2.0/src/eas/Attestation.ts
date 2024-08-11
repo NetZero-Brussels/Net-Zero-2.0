@@ -2,7 +2,28 @@ import { EAS, SchemaEncoder, TransactionSigner } from "@ethereum-attestation-ser
 
 export const EASContractAddress = '0x4200000000000000000000000000000000000021';
 export const SchemaRegistryContractAddress = '0x4200000000000000000000000000000000000020';
-export const SCHEMA_UUID = '0xf6c549f2ebc46565727b07f1fbb85b66beefe127336da2f7779f305db60c9a41';
+// export const SCHEMA_UUID = '0xf6c549f2ebc46565727b07f1fbb85b66beefe127336da2f7779f305db60c9a41';
+export const SCHEMA_UUID = '0x2b3a5af49b0bc50055dac2c367113fe0d30370b3dbdae46deb2bd6ddc49cecd7';
+
+const schemaString = "string institution,uint256 deposit,string country";
+
+export function getSchema() {
+  return schemaString;
+}
+
+export function getEncodedData(institution: string, deposit: number, country: string) {
+        // Initialize SchemaEncoder with the schema string
+        const schemaEncoder = new SchemaEncoder(schemaString);
+      
+        // Encode the data according to your schema
+        const encodedData = schemaEncoder.encodeData([
+          { name: "institution", value: institution, type: "string" },
+          { name: "deposit", value: deposit, type: "uint256" },
+          { name: "country", value: country, type: "string" },
+        ]);
+
+        return encodedData;
+}
 
 // Utility function to create an attestation
 export async function createAttestation({
