@@ -77,7 +77,7 @@ app.frame("/", async (c) => {
       </div>
     ),
     intents: [
-      <TextInput placeholder="Choose your position..." />,
+      <TextInput placeholder="What is your name?" />,
       <Button.Link href="https://net-zero-2-0.vercel.app/">
         Visit NetZero
       </Button.Link>,
