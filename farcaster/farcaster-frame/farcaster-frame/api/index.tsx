@@ -44,37 +44,6 @@ async function getUserWalletAddress() {
   }
 }
 
-async function createVoter(name) {
-  try {
-    const walletAddress = await getUserWalletAddress();
-    if (!walletAddress) throw new Error("No wallet address found");
-    const contract = await getContractInstance();
-    const tx = await contract.createVoter(name, walletAddress);
-    await tx.wait();
-    console.log(`Voter Created: ${name}, Wallet: ${walletAddress}`);
-  } catch (error) {
-    console.error("Failed to create voter:", error);
-  }
-}
-
-async function createProject(name, totalVotes = 0, certificateId = 0) {
-  try {
-    const walletAddress = await getUserWalletAddress();
-    if (!walletAddress) throw new Error("No wallet address found");
-    const contract = await getContractInstance();
-    const tx = await contract.createProject(
-      totalVotes,
-      walletAddress,
-      certificateId,
-      name
-    );
-    await tx.wait();
-    console.log(`Project Created: ${name}, Wallet: ${walletAddress}`);
-  } catch (error) {
-    console.error("Failed to create project:", error);
-  }
-}
-
 function formatPosition(position) {
   const index = parseInt(position);
   const suffixes = ["th", "st", "nd", "rd"];
@@ -115,7 +84,7 @@ app.frame("/", async (c) => {
   const leaderboard = await fetchLeaderboard();
 
   return c.res({
-    text: (
+    image: (
       <div
         style={{
           display: "flex",
@@ -209,38 +178,6 @@ app.frame("/", async (c) => {
             marginTop: 40,
           }}
         ></div>
-      </div>
-    ),
-    leaderboard: (
-      <div
-        style={{
-          color: 'white',
-          fontSize: 20,
-          marginTop: 20,
-          textAlign: 'center',
-        }}
-      >
-        {leaderboard.length > 0 ? (
-          <ul
-            style={{
-              listStyleType: 'none',
-              padding: 0,
-            }}
-          >
-            {leaderboard.map((user, index) => (
-              <li
-                key={user.address}
-                style={{
-                  marginBottom: 10,
-                }}
-              >
-                {index + 1}. {user.name || user.address}: {user.reputation} points
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div>No users found or unable to fetch data.</div>
-        )}
       </div>
     ),
     intents: [
