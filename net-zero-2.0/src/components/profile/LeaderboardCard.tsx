@@ -9,6 +9,9 @@ export default function LeaderboardCard() {
           LeaderBoard
         </h1>
       </div>
+      <p className="mb-[-55px]">
+        Compete with other voters with reputation points.
+      </p>
       <LeaderboardSelect />
     </div>
   );
