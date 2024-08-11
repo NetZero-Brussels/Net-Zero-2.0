@@ -1,10 +1,9 @@
 import { Button, Frog, TextInput } from 'frog';
 import { devtools } from 'frog/dev';
 import { serveStatic } from 'frog/serve-static';
-// import { neynar } from 'frog/hubs'
 import { handle } from 'frog/vercel';
-// import axios from 'axios';  
-
+import { ethers } from 'ethers';
+import contractABI from './NetZeroGovernor.json';
 
 export const app = new Frog({
   assetsPath: '/',
@@ -17,6 +16,42 @@ const mockLeaderboard = [
   { address: '0x456...', name: 'Bob', reputation: 120 },
   { address: '0x789...', name: 'Charlie', reputation: 100 },
 ];
+
+const contractAddress = '0x4e7A32FAd4364710A81e6B98B64cdc14C5a9E29D';
+
+
+async function getContractInstance() {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+  await provider.send("eth_requestAccounts", []);
+
+  const signer = provider.getSigner();
+
+  const contract = new ethers.Contract(contractAddress, contractABI, signer);
+  return contract;
+}
+
+async function createVoter(name, walletAddress) {
+  try {
+    const contract = await getContractInstance();
+    const tx = await contract.createVoter(name, walletAddress);
+    await tx.wait();
+    console.log(`Voter Created: ${name}, Wallet: ${walletAddress}`);
+  } catch (error) {
+    console.error('Failed to create voter:', error);
+  }
+}
+
+async function createProject(name, walletAddress, totalVotes = 0, certificateId = 0) {
+  try {
+    const contract = await getContractInstance();
+    const tx = await contract.createProject(totalVotes, walletAddress, certificateId, name);
+    await tx.wait();
+    console.log(`Project Created: ${name}, Wallet: ${walletAddress}`);
+  } catch (error) {
+    console.error('Failed to create project:', error);
+  }
+}
 
 function formatPosition(position) {
   const index = parseInt(position);
@@ -139,6 +174,20 @@ app.frame('/', async (c) => {
   )
 }
         </div>
+
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            color: 'white',
+            fontSize: 20,
+            marginTop: 40,
+          }}
+        >
+          <Button onClick={() => createVoter('New Voter', '0x123...')} >Register New Voter</Button>
+          <Button onClick={() => createProject('New Project', '0x456...')} >Create New Project</Button>
+        </div>
       </div>
     ),
     intents: [
@@ -154,6 +203,9 @@ app.frame('/', async (c) => {
 // @ts-ignore
 const isEdgeFunction = typeof EdgeFunction !== 'undefined';
 const isProduction = isEdgeFunction || import.meta.env?.MODE !== 'development';
+
+
+devtools(app, { serveStatic });
 
 export const GET = handle(app);
 export const POST = handle(app);
