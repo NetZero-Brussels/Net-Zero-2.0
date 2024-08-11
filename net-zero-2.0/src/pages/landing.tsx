@@ -5,36 +5,77 @@ import {
   IonContent,
   IonHeader,
   IonPage,
-  IonRedirect,
   IonText,
 } from "@ionic/react";
 import { Header, ThirdwebLogIn, ThirdwebSignUp } from "../components";
-import { useActiveWallet } from "thirdweb/react";
+import {
+  useActiveAccount,
+  useActiveWallet,
+  useReadContract,
+} from "thirdweb/react";
+import { NetZeroContractRPC } from "../data/walletConnection";
 
 export default function LandingPage() {
-  const wallet = useActiveWallet();
+  const activeAccount = useActiveAccount();
+  const [walletAddr, setWalletAddr] = useState<string | undefined>(undefined);
+
+  // Hook to check if the user is registered as a voter
+  const { data: isVoter, isLoading: isVoterLoading } = useReadContract({
+    contract: NetZeroContractRPC, // Replace with your contract address
+    method: "function isVoterRegistered(address userAddress) returns (bool)",
+    params: [walletAddr!],
+  });
+
+  // Hook to check if the user is registered as an institution
+  const { data: isInstitution, isLoading: isInstitutionLoading } =
+    useReadContract({
+      contract: NetZeroContractRPC, // Replace with your contract address
+      method:
+        "function isInstitutionRegistered(address institutionAddress) returns (bool)",
+      params: [walletAddr!],
+    });
 
   useEffect(() => {
-    // Function to check if the user is connected
-    const checkWalletConnection = () => {
-      if (wallet) {
-        console.log(`User is connected with address: ${wallet}`);
-        window.location.href = "/onboarding";
+    // Function to check user registration status
+    const checkUserRegistration = () => {
+      setWalletAddr(activeAccount?.address);
+
+      if (walletAddr) {
+        console.log(`User is connected with address: ${walletAddr}`);
+        if (!isVoterLoading && !isInstitutionLoading) {
+          console.log("User registration status loaded");
+          console.log("address: ", walletAddr);
+          console.log(`isVoter: ${isVoter}`);
+          console.log(`isInstitution: ${isInstitution}`);
+
+          if (isVoter) {
+            window.location.href = "/voter";
+          } else if (isInstitution) {
+            window.location.href = "/institution";
+          } else {
+            window.location.href = "/onboarding";
+          }
+        }
       } else {
         console.log("User is not connected");
       }
     };
 
-    // Call the function to check the connection status
-    checkWalletConnection();
-  }, [wallet]); // Depend on isConnected and address to re-run the effect if they change
+    // Call the function to check the registration status
+    checkUserRegistration();
+  }, [
+    activeAccount,
+    isVoterLoading,
+    isInstitutionLoading,
+    isVoter,
+    isInstitution,
+  ]);
 
   return (
     <IonPage>
       <Header />
       <IonContent>
         <div className="mt-16 mb-20 mx-[20%] flex items-center justify-center">
-          {/* box for the text to be seen correclty */}
           <div className="object-center text-xl bg-white bg-opacity-30 p-8 rounded-lg shadow-md w-full ">
             <IonText color={"white"}>
               A web3 app that helps neutralize your carbon footprint and offers

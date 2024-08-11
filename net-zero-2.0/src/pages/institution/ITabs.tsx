@@ -19,36 +19,36 @@ import {
 import DiscoveryPage from "./DiscoveryPage";
 
 import { Header } from "../../components";
-import ProfilePage from "./ProfilePage";
+import IProfilePage from "./ProfilePage";
 
-const VoterTabs = () => {
+const ITabs = () => {
   return (
     <IonPage>
       <IonTabs>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/voter/discovery">
+          <IonTabButton tab="tab1" href="/institutions/discovery">
             <IonIcon icon={rocketOutline} />
             <IonLabel>Discovery</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab2" href="/voter/account">
+          <IonTabButton tab="tab2" href="/institutions/account">
             <IonIcon icon={personOutline} />
             <IonLabel>Account</IonLabel>
           </IonTabButton>
         </IonTabBar>
         <IonRouterOutlet>
           <Route
-            path="/voter/discovery"
+            path="/institutions/discovery"
             render={() => <DiscoveryPage />}
             exact={true}
           />
           <Route
-            path="/voter/account"
-            render={() => <ProfilePage />}
+            path="/institutions/account"
+            render={() => <IProfilePage />}
             exact={true}
           />
           <Route
-            path="/voter"
-            render={() => <Redirect to="/voter/discovery" />}
+            path="/institutions"
+            render={() => <Redirect to="/institutions/discovery" />}
             exact={true}
           />
         </IonRouterOutlet>
@@ -57,4 +57,4 @@ const VoterTabs = () => {
   );
 };
 
-export default VoterTabs;
+export default ITabs;

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import "./App.css";
 import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
@@ -29,6 +30,7 @@ import {
   Onboarding,
   OnboardingCompleted,
   VoterTabs,
+  ITabs,
 } from "./pages";
 
 setupIonicReact({});
@@ -46,7 +48,7 @@ function App() {
               render={() => <OnboardingCompleted />}
             />
             <Route path="/voter" render={() => <VoterTabs />} />
-            <Route path="/dashboard" render={() => <></>} />
+            <Route path="/institutions" render={() => <ITabs />} />
             <Route
               path="/"
               render={() => <Redirect to="/landing" />}
